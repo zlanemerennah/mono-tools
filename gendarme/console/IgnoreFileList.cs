@@ -113,7 +113,7 @@ namespace Gendarme {
 				break;
 			case 'R': // rule, a "*" in the rule will match any series of charaters
 				string current_rule_glob = GetString (buffer, length);
-
+				current_rules.Clear();
 				foreach (IRule rule in Runner.Rules) {
 					if (rule.FullName.GlobMatch(current_rule_glob)) {
 						current_rules.Add(rule.FullName);
