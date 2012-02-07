@@ -19,7 +19,7 @@
 #    Naming rules from Types in a NUnit namespace you could
 #    use the following:
 #
-#       R: Gendarme.Rules.Nameing.*
+#       R: Gendarme.Rules.Naming.*
 #       T: *.NUnit.*
 #
 # See below for examples of these
