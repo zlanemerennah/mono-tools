@@ -40,7 +40,7 @@ namespace Gendarme {
 
 	public class IgnoreFileList : BasicIgnoreList {
 
-		private List<string> current_rules = new List<string>();
+		private List<string> current_rules = new List<string> ();
 
 		private Dictionary<string, HashSet<string>> assemblies = new Dictionary<string, HashSet<string>> ();
 		private Dictionary<string, HashSet<string>> types = new Dictionary<string, HashSet<string>> ();
@@ -113,33 +113,33 @@ namespace Gendarme {
 				break;
 			case 'R': // rule, a "*" in the rule will match any series of charaters
 				string current_rule_glob = GetString (buffer, length);
-				current_rules.Clear();
+				current_rules.Clear ();
 				foreach (IRule rule in Runner.Rules) {
 					string fullName = rule.FullName;
-					if (fullName.GlobMatch(current_rule_glob)) {
-						current_rules.Add(fullName);
+					if (fullName.GlobMatch (current_rule_glob)) {
+						current_rules.Add (fullName);
 					}
 				}
 				break;
 			case 'A': // assembly - we support Name, FullName and "*" anywhere in the name
 				string target = GetString (buffer, length);
 				foreach (string current_rule in current_rules) {
-						Add(assemblies, current_rule, target);
+						Add (assemblies, current_rule, target);
 				}
 				break;
 			case 'T': // type (no space allowed), "*" will match any string of characters
 				foreach (string current_rule in current_rules) {
-					Add(types, current_rule, GetString(buffer, length));
+					Add (types, current_rule, GetString (buffer, length));
 				}
 				break;
 			case 'M': // method, "*" will match any string of characters
 				foreach (string current_rule in current_rules) {
-					Add(methods, current_rule, GetString(buffer, length));
+					Add (methods, current_rule, GetString (buffer, length));
 				}
 				break;
 			case 'N': // namespace - special case (no need to resolve), "*" is NOT supported, exact matches only
 				foreach (string current_rule in current_rules) {
-					base.Add(current_rule, NamespaceDefinition.GetDefinition(GetString(buffer, length)));
+					base.Add (current_rule, NamespaceDefinition.GetDefinition (GetString (buffer, length)));
 				}
 				break;
 			case '@': // include file
@@ -164,32 +164,32 @@ namespace Gendarme {
 			foreach (AssemblyDefinition assembly in Runner.Assemblies) {
 				AssemblyDefinition assembly1 = assembly;
 				foreach (var rules in assemblies
-							.Where(x => assembly1.Name.Name.GlobMatch(x.Key))
-							.Select(x => x.Value)) {
-					AddList(assembly, rules);
+							.Where (x => assembly1.Name.Name.GlobMatch (x.Key))
+							.Select (x => x.Value)) {
+					AddList (assembly, rules);
 				}
 				foreach (var rules in assemblies
-							.Where(x => assembly1.Name.FullName.GlobMatch(x.Key))
-							.Select(x => x.Value)) {
-					AddList(assembly, rules);
+							.Where (x => assembly1.Name.FullName.GlobMatch (x.Key))
+							.Select (x => x.Value)) {
+					AddList (assembly, rules);
 				}
 
 				foreach (ModuleDefinition module in assembly.Modules) {
 					foreach (TypeDefinition type in module.GetAllTypes ()) {
 						TypeDefinition type1 = type;
 						foreach (var rules in types
-									.Where(x => type1.GetFullName().GlobMatch(x.Key))
-									.Select(x => x.Value)) {
-							AddList(type, rules);
+									.Where (x => type1.GetFullName ().GlobMatch (x.Key))
+									.Select (x => x.Value)) {
+							AddList (type, rules);
 						}
 
 						if (type.HasMethods) {
 							foreach (MethodDefinition method in type.Methods) {
 								MethodDefinition method1 = method;
 								foreach (var rules in methods
-											.Where(x => method1.GetFullName().GlobMatch(x.Key))
-											.Select(x => x.Value)) {
-									AddList(method, rules);
+											.Where (x => method1.GetFullName ().GlobMatch (x.Key))
+											.Select (x => x.Value)) {
+									AddList (method, rules);
 								}
 							}
 						}
@@ -209,11 +209,11 @@ namespace Gendarme {
 	public static class StringExtensions
 	{
 		// Returns true if the globPattern matches the given string, where any "*" characters in the glob pattern are expanded to a regex .*
-		internal static bool GlobMatch(this string str, string globPattern)
+		internal static bool GlobMatch (this string str, string globPattern)
 		{
-			if (globPattern.IndexOf('*') < 0)
-				return str.Equals(globPattern, StringComparison.InvariantCulture);
-			return Regex.IsMatch(str, "^" + Regex.Escape(globPattern).Replace(@"\*", @".*") + "$");
+			if (globPattern.IndexOf ('*') < 0)
+				return str.Equals (globPattern, StringComparison.InvariantCulture);
+			return Regex.IsMatch (str, "^" + Regex.Escape (globPattern).Replace (@"\*", @".*") + "$");
 		}
 	}
 }
