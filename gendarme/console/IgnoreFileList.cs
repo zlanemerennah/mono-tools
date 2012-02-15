@@ -115,8 +115,9 @@ namespace Gendarme {
 				string current_rule_glob = GetString (buffer, length);
 				current_rules.Clear();
 				foreach (IRule rule in Runner.Rules) {
-					if (rule.FullName.GlobMatch(current_rule_glob)) {
-						current_rules.Add(rule.FullName);
+					string fullName = rule.FullName;
+					if (fullName.GlobMatch(current_rule_glob)) {
+						current_rules.Add(fullName);
 					}
 				}
 				break;
@@ -208,7 +209,7 @@ namespace Gendarme {
 	public static class StringExtensions
 	{
 		// Returns true if the globPattern matches the given string, where any "*" characters in the glob pattern are expanded to a regex .*
-		public static bool GlobMatch(this string str, string globPattern)
+		internal static bool GlobMatch(this string str, string globPattern)
 		{
 			if (globPattern.IndexOf('*') < 0)
 				return str.Equals(globPattern, StringComparison.InvariantCulture);
